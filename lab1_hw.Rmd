@@ -35,6 +35,7 @@ pi <- 3.14159265359
 4. Is `pi` an integer or numeric? Why? Show your code.  
 ```{r}
 is.integer(pi)
+is.numeric(pi)
 ```
 
 5. You have decided to use your new analytical powers in R to become a professional gambler. Here are your winnings and losses this week. Note that you don't gamble on the weekends!  
