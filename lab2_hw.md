@@ -18,7 +18,7 @@ library("tidyverse")
 ```
 
 ```
-## -- Attaching packages ------------------------------------- tidyverse 1.3.0 --
+## -- Attaching packages ----------------------------------------------------- tidyverse 1.3.0 --
 ```
 
 ```
@@ -29,7 +29,7 @@ library("tidyverse")
 ```
 
 ```
-## -- Conflicts ---------------------------------------- tidyverse_conflicts() --
+## -- Conflicts -------------------------------------------------------- tidyverse_conflicts() --
 ## x dplyr::filter() masks stats::filter()
 ## x dplyr::lag()    masks stats::lag()
 ```
@@ -203,29 +203,29 @@ sleep[,1]
 7. We are interested in two groups; small and large mammals. Let's define small as less than or equal to 1kg body weight and large as greater than or equal to 200kg body weight. Make two new dataframes (large and small) based on these parameters.  
 
 ```r
-small_mammals <- filter(sleep, bodywt<200)
+small_mammals <- filter(sleep, bodywt<=1)
 small_mammals
 ```
 
 ```
-## # A tibble: 76 x 11
+## # A tibble: 36 x 11
 ##    name  genus vore  order conservation sleep_total sleep_rem sleep_cycle awake
 ##    <chr> <chr> <chr> <chr> <chr>              <dbl>     <dbl>       <dbl> <dbl>
-##  1 Chee~ Acin~ carni Carn~ lc                  12.1      NA        NA      11.9
-##  2 Owl ~ Aotus omni  Prim~ <NA>                17         1.8      NA       7  
-##  3 Moun~ Aplo~ herbi Rode~ nt                  14.4       2.4      NA       9.6
-##  4 Grea~ Blar~ omni  Sori~ lc                  14.9       2.3       0.133   9.1
-##  5 Thre~ Brad~ herbi Pilo~ <NA>                14.4       2.2       0.767   9.6
-##  6 Nort~ Call~ carni Carn~ vu                   8.7       1.4       0.383  15.3
-##  7 Vesp~ Calo~ <NA>  Rode~ <NA>                 7        NA        NA      17  
-##  8 Dog   Canis carni Carn~ domesticated        10.1       2.9       0.333  13.9
-##  9 Roe ~ Capr~ herbi Arti~ lc                   3        NA        NA      21  
-## 10 Goat  Capri herbi Arti~ lc                   5.3       0.6      NA      18.7
-## # ... with 66 more rows, and 2 more variables: brainwt <dbl>, bodywt <dbl>
+##  1 Owl ~ Aotus omni  Prim~ <NA>                17         1.8      NA       7  
+##  2 Grea~ Blar~ omni  Sori~ lc                  14.9       2.3       0.133   9.1
+##  3 Vesp~ Calo~ <NA>  Rode~ <NA>                 7        NA        NA      17  
+##  4 Guin~ Cavis herbi Rode~ domesticated         9.4       0.8       0.217  14.6
+##  5 Chin~ Chin~ herbi Rode~ domesticated        12.5       1.5       0.117  11.5
+##  6 Star~ Cond~ omni  Sori~ lc                  10.3       2.2      NA      13.7
+##  7 Afri~ Cric~ omni  Rode~ <NA>                 8.3       2        NA      15.7
+##  8 Less~ Cryp~ omni  Sori~ lc                   9.1       1.4       0.15   14.9
+##  9 Big ~ Epte~ inse~ Chir~ lc                  19.7       3.9       0.117   4.3
+## 10 Euro~ Erin~ omni  Erin~ lc                  10.1       3.5       0.283  13.9
+## # ... with 26 more rows, and 2 more variables: brainwt <dbl>, bodywt <dbl>
 ```
 
 ```r
-large_mammals <- filter(sleep, bodywt > 200)
+large_mammals <- filter(sleep, bodywt>=200)
 large_mammals
 ```
 
@@ -251,7 +251,7 @@ mean(small_mammals$bodywt)
 ```
 
 ```
-## [1] 20.52396
+## [1] 0.2596667
 ```
 
 ```r
@@ -280,7 +280,7 @@ mean(small_mammals$sleep_total)
 ```
 
 ```
-## [1] 11.09079
+## [1] 12.65833
 ```
 
 
