@@ -1,11 +1,11 @@
 ---
 title: "Lab 3 Homework"
-author: "Please Add Your Name Here"
+author: "Jason Nguyen"
 date: "Winter 2020"
 output:
-  html_document:
+  html_document: 
+    keep_md: yes
     theme: spacelab
-    toc: no
 ---
 
 ```{r setup, include=FALSE}
@@ -42,12 +42,11 @@ spec(homerange)
 dim(homerange)
 ```
 ```{r}
-col <- colnames(homerange)
-col
+colnames(homerange)
 ```
 
 ```{r}
-?class
+lapply(homerange, class)
 ```
 
 ```{r}
@@ -57,25 +56,88 @@ summary(homerange)
 
 4. Are there NA's in your data? Show the code that you would use to verify this, please.  
 
+```{r}
+anyNA(homerange)
+```
+
 5. Change the class of the variables `taxon` and `order` to factors and display their levels.  
+```{r}
+homerange$taxon <- as.factor(homerange$taxon)
+class(homerange$taxon)
+```
+
+```{r}
+levels(homerange$taxon)
+```
+
+```{r}
+homerange$order <- as.factor(homerange$order)
+class(homerange$order)
+```
+```{r}
+levels(homerange$order)
+```
+
 
 6. Make a new dataframe `deer` that is limited to the mean mass, log10 mass, family, genus, and species of deer in the database. The family for deer is cervidae. Arrange the data in descending order by log10 mass. Which is the largest deer?  
+```{r}
+deer <- homerange %>% 
+  filter(family=="cervidae") %>% 
+  select(mean.mass.g, log10.mass, family, genus, species) %>% 
+  arrange(desc(log10.mass))
+deer
+```
+  The largest deer is Alces alces.
 
 7. As measured by the data, which snake species has the smallest homerange? Show all of your work, please. Look this species up online and tell me about it!  
-
+```{r}
+snake <- homerange %>% 
+  filter(taxon == "snakes") %>% 
+  select(common.name, mean.hra.m2) %>% 
+  arrange(mean.hra.m2)
+snake
+```
+Namaqua dwarf adder has the smallest homerange. "Namaqua dwarf adder is the smallest adder in the world... It occurs in coastal dunes in Namaqualand and southern Namibia where it feeds on lizards and Rain frogs... The venom of this snake is mildly cytotoxic causing pain and swelling." [Source](https://www.africansnakebiteinstitute.com/snake/namaqua-dwarf-adder/)
 
 8. You suspect that homerange and mass are correlated in birds. We need a ratio that facilitates exploration of this prediction. First, build a new dataframe called `hra_ratio` that is limited to genus, species, mean.mass.g, log10.mass, log10.hra. Arrange it in ascending order by mean mass in grams.  
+```{r}
+hra_ratio <- homerange %>% 
+  filter(taxon == "birds") %>% 
+  select(genus, species, mean.mass.g, log10.mass, log10.hra) %>% 
+  arrange(mean.mass.g)
+hra_ratio
+```
 
 
 9. Replace the existing `hra_ratio` dataframe with a new dataframe that adds a column calculating the ratio of log 10 hra to log 10 mass. Call it `hra.mass.ratio`. Arrange it in descending order by mean mass in grams.  
+```{r}
+hra.mass.ratio <- hra_ratio %>%
+  mutate(hra.mass.ratio=log10.hra/log10.mass) %>% 
+  arrange(desc(mean.mass.g))
+hra.mass.ratio
+```
 
 
 10. What is the lowest mass for birds with a `hra.mass.ratio` greater than or equal to 4.0?
+```{r}
+hra.mass.ratio%>% 
+  filter(hra.mass.ratio >= 4.0) %>% 
+  arrange(mean.mass.g)
+```
+The lowest mass for a bird with a `hra.mass.ratio` greater than or equal to 4.0 is 5.15g.
 
+11. Do a search online; what is the common name of the bird from #10 above? Place a link in your markdown file that takes us to a webpage with information on its biology.  
 
-11. Do a search online; what is the common name of the bird from #8 above? Place a link in your markdown file that takes us to a webpage with information on its biology.  
+  Regulus regulus is the bird with the lowest mass of the birds that have a hra mass ratio greater than or equal to 4. The common name for this bird is "Goldcrest." For more information, click [here](https://en.wikipedia.org/wiki/Goldcrest)
 
 12. What is the `hra.mass.ratio` for an ostrich? Show your work, please.  
+```{r}
+homerange %>% 
+  filter(common.name == "ostrich") %>% 
+  mutate(hra.mass.ratio=log10.hra/log10.mass) %>% 
+  select(common.name, log10.hra, log10.mass, hra.mass.ratio)
+```
+  The hra.mass.ratio for an ostrich is 1.602565.
 
 ## Push your final code to GitHub!
 Please be sure that you have check the `keep md` file in the knit preferences.  
