@@ -11,7 +11,7 @@
 
 <meta name="author" content="Jason Nguyen" />
 
-<meta name="date" content="2020-02-04" />
+<meta name="date" content="2020-02-06" />
 
 <title>Lab 4 Homework</title>
 
@@ -389,7 +389,7 @@ summary {
 
 <h1 class="title toc-ignore">Lab 4 Homework</h1>
 <h4 class="author">Jason Nguyen</h4>
-<h4 class="date">February 4, 2020</h4>
+<h4 class="date">February 6, 2020</h4>
 
 </div>
 
@@ -482,7 +482,7 @@ summary {
 ## [67] &quot;2008&quot;                    &quot;2009&quot;                   
 ## [69] &quot;2010&quot;                    &quot;2011&quot;                   
 ## [71] &quot;2012&quot;</code></pre>
-<p>##Some of the names are very specific details such as capitalization, or having a “#” or a space, so typos can occur easily.</p>
+<p>Some of the names are very specific details such as capitalization, or having a “#” or a space, so typos can occur easily.</p>
 <ol start="3" style="list-style-type: decimal">
 <li>What is the structure of the data? Show the classes of each variable.</li>
 </ol>
@@ -849,7 +849,7 @@ summary {
 <ol start="4" style="list-style-type: decimal">
 <li>Think about the classes. Will any present problems? Make any changes you think are necessary below.</li>
 </ol>
-<p>##We</p>
+<p>We need to change the first few columns into factor so we can use functions.</p>
 <pre class="r"><code>new_factor&lt;- c(1,2,4:6,8)
 fisheries[,new_factor] &lt;- lapply(fisheries[,new_factor], as.factor)
 lapply(fisheries, class)</code></pre>
@@ -1220,7 +1220,7 @@ lapply(fisheries, class)</code></pre>
 <ol start="8" style="list-style-type: decimal">
 <li>Are these data tidy? Why or why not, and, how do you know? Use the appropriate pivot function to tidy the data. Remove the NA’s. Put the tidy data frame into a new object <code>fisheries_tidy</code>.</li>
 </ol>
-<p>##The data is untidy because the years are data so they should be values instead of names of columns.</p>
+<p>The data is untidy because the years are data so they should be values instead of names of columns.</p>
 <pre class="r"><code>fisheries_tidy &lt;- fisheries2 %&gt;% 
   pivot_longer(-c(&quot;country&quot;, &quot;commname&quot;, &quot;ISSCAAP_spgroup&quot;, &quot;ISSCAAP_spgroupname&quot;, &quot;ASFIS_spcode&quot;, &quot;ASFIS_sciname&quot;, &quot;FAO_area&quot;, &quot;unit&quot;),
                names_to = &quot;year&quot;,
@@ -1295,33 +1295,128 @@ fisheries_tidy2</code></pre>
 <ol start="12" style="list-style-type: decimal">
 <li>Which country had the largest overall catch in the year 2000?</li>
 </ol>
-<pre class="r"><code>fisheries_tidy2 %&gt;% 
+<pre class="r"><code>fisheries_tidy2 %&gt;%
+  group_by(country) %&gt;% 
   filter(year==&quot;2000&quot;) %&gt;% 
+  summarize(catch = sum(catch,na.rm=T)) %&gt;% 
   arrange(desc(catch))</code></pre>
-<pre><code>## # A tibble: 8,793 x 6
-##    country       ISSCAAP_spgroupname   ASFIS_spcode ASFIS_sciname   year   catch
-##    &lt;fct&gt;         &lt;fct&gt;                 &lt;fct&gt;        &lt;fct&gt;           &lt;chr&gt;  &lt;dbl&gt;
-##  1 Peru          Herrings, sardines, ~ 1210600208   Engraulis ring~ 2000  9.58e6
-##  2 Chile         Herrings, sardines, ~ 1210600208   Engraulis ring~ 2000  1.70e6
-##  3 Chile         Miscellaneous pelagi~ 1702300405   Trachurus murp~ 2000  1.23e6
-##  4 Russian Fede~ Cods, hakes, haddocks 1480401601   Theragra chalc~ 2000  1.22e6
-##  5 United State~ Cods, hakes, haddocks 1480401601   Theragra chalc~ 2000  1.18e6
-##  6 Viet Nam      Marine fishes not id~ 199XXXXXXX0~ Osteichthyes    2000  1.01e6
-##  7 Iceland       Miscellaneous pelagi~ 1230400201   Mallotus villo~ 2000  8.92e5
-##  8 Myanmar       Marine fishes not id~ 199XXXXXXX0~ Osteichthyes    2000  8.73e5
-##  9 Norway        Herrings, sardines, ~ 1210500105   Clupea harengus 2000  8.00e5
-## 10 Chile         Herrings, sardines, ~ 1210507801   Strangomera be~ 2000  7.23e5
-## # ... with 8,783 more rows</code></pre>
-<div id="section" class="section level4">
-<h4></h4>
+<pre><code>## # A tibble: 193 x 2
+##    country                     catch
+##    &lt;fct&gt;                       &lt;dbl&gt;
+##  1 Peru                     10625010
+##  2 Japan                     4921013
+##  3 United States of America  4692229
+##  4 Chile                     4297928
+##  5 Indonesia                 3761769
+##  6 Russian Federation        3678828
+##  7 Thailand                  2795719
+##  8 India                     2760632
+##  9 Norway                    2698506
+## 10 Iceland                   1982369
+## # ... with 183 more rows</code></pre>
+<p>Peru had the largest overall catch in the year 2000.</p>
 <ol start="13" style="list-style-type: decimal">
-<li><p>Which country caught the most sardines (<em>Sardina</em>) between the years 1990-2000?</p></li>
-<li><p>Which five countries caught the most cephalopods between 2008-2012?</p></li>
-<li><p>Given the top five countries from question 12 above, which species was the highest catch total? The lowest?</p></li>
-<li><p>In some cases, the taxonomy of the fish being caught is unclear. Make a new data frame called <code>coastal_fish</code> that shows the taxonomic composition of “Miscellaneous coastal fishes” within the ISSCAAP_spgroupname column.</p></li>
-<li><p>Use the data to do at least one exploratory analysis of your choice. What can you learn?</p></li>
+<li>Which country caught the most sardines (<em>Sardina</em>) between the years 1990-2000?</li>
 </ol>
-</div>
+<pre class="r"><code>fisheries_tidy2 %&gt;%
+  group_by(country) %&gt;% 
+  filter(year &gt;=1990 &amp; year&lt;=2000) %&gt;% 
+  filter(ASFIS_sciname == &quot;Sardina pilchardus&quot;) %&gt;%
+  summarize(catch = sum(catch, na.rm=T)) %&gt;% 
+  arrange(desc(catch))</code></pre>
+<pre><code>## # A tibble: 204 x 2
+##    country              catch
+##    &lt;fct&gt;                &lt;dbl&gt;
+##  1 Morocco            4785190
+##  2 Spain              1425317
+##  3 Russian Federation 1035139
+##  4 Portugal            926318
+##  5 Ukraine             784730
+##  6 Italy               377907
+##  7 Algeria             311733
+##  8 Turkey              273565
+##  9 France              263871
+## 10 Denmark             242017
+## # ... with 194 more rows</code></pre>
+<p>Morocoo caught the most sardines between the years 1990-2000.</p>
+<ol start="14" style="list-style-type: decimal">
+<li>Which five countries caught the most cephalopods between 2008-2012?</li>
+</ol>
+<pre class="r"><code>fisheries_tidy2 %&gt;% 
+  group_by(country) %&gt;%
+  filter(year &gt;= 2008 &amp; year&lt;=2012) %&gt;% 
+  filter(ASFIS_sciname == &quot;Cephalopoda&quot;) %&gt;% 
+  summarize(catch = sum(catch, na.rm=T)) %&gt;%
+  arrange(desc(catch)) %&gt;% 
+  top_n(5)</code></pre>
+<pre><code>## Selecting by catch</code></pre>
+<pre><code>## # A tibble: 5 x 2
+##   country     catch
+##   &lt;fct&gt;       &lt;dbl&gt;
+## 1 India      429670
+## 2 China      268557
+## 3 Cambodia    15505
+## 4 Madagascar   7971
+## 5 Mozambique   6511</code></pre>
+<ol start="15" style="list-style-type: decimal">
+<li>Given the top five countries from question 12 above, which species was the highest catch total? The lowest?</li>
+</ol>
+<pre class="r"><code>top_5_fisheries &lt;- fisheries_tidy2 %&gt;% 
+  filter(country %in% c(&quot;India&quot;, &quot;China&quot;, &quot;Cambodia&quot;, &quot;Madagascar&quot;, &quot;Mozambique&quot;)) %&gt;% 
+  group_by(ASFIS_sciname) %&gt;%
+  summarize(catch=sum(catch, na.rm=T)) %&gt;% 
+  arrange(desc(catch))
+
+top_n(top_5_fisheries, 1)</code></pre>
+<pre><code>## Selecting by catch</code></pre>
+<pre><code>## # A tibble: 1 x 2
+##   ASFIS_sciname     catch
+##   &lt;fct&gt;             &lt;dbl&gt;
+## 1 Osteichthyes  101995246</code></pre>
+<pre class="r"><code>top_n(top_5_fisheries, -1)</code></pre>
+<pre><code>## Selecting by catch</code></pre>
+<pre><code>## # A tibble: 2 x 2
+##   ASFIS_sciname       catch
+##   &lt;fct&gt;               &lt;dbl&gt;
+## 1 Lampanyctus achirus     0
+## 2 Merluccius polli        0</code></pre>
+<p>The species with the highest catch total among these five countries was “Osteichthyes.” The species with the lowest catch total among these five countries was “Lampanyctus achirus” and “Merluccius polli.”</p>
+<ol start="16" style="list-style-type: decimal">
+<li>In some cases, the taxonomy of the fish being caught is unclear. Make a new data frame called <code>coastal_fish</code> that shows the taxonomic composition of “Miscellaneous coastal fishes” within the ISSCAAP_spgroupname column.</li>
+</ol>
+<pre class="r"><code>coastal_fish &lt;- fisheries_tidy2 %&gt;%
+  filter(ISSCAAP_spgroupname == &quot;Miscellaneous coastal fishes&quot;)
+coastal_fish</code></pre>
+<pre><code>## # A tibble: 69,821 x 6
+##    country ISSCAAP_spgroupname          ASFIS_spcode ASFIS_sciname year  catch
+##    &lt;fct&gt;   &lt;fct&gt;                        &lt;fct&gt;        &lt;fct&gt;         &lt;chr&gt; &lt;dbl&gt;
+##  1 Albania Miscellaneous coastal fishes 1703926101   Boops boops   1983    559
+##  2 Albania Miscellaneous coastal fishes 1703926101   Boops boops   1984    392
+##  3 Albania Miscellaneous coastal fishes 1703926101   Boops boops   1985    406
+##  4 Albania Miscellaneous coastal fishes 1703926101   Boops boops   1986    499
+##  5 Albania Miscellaneous coastal fishes 1703926101   Boops boops   1987    564
+##  6 Albania Miscellaneous coastal fishes 1703926101   Boops boops   1988    724
+##  7 Albania Miscellaneous coastal fishes 1703926101   Boops boops   1989    583
+##  8 Albania Miscellaneous coastal fishes 1703926101   Boops boops   1990    754
+##  9 Albania Miscellaneous coastal fishes 1703926101   Boops boops   1991    283
+## 10 Albania Miscellaneous coastal fishes 1703926101   Boops boops   1992    196
+## # ... with 69,811 more rows</code></pre>
+<ol start="17" style="list-style-type: decimal">
+<li>Use the data to do at least one exploratory analysis of your choice. What can you learn?</li>
+</ol>
+<p>I am going to discover which country caught the most mollusca in 2011.</p>
+<pre class="r"><code>fisheries_tidy2 %&gt;%
+  filter(ASFIS_sciname == &quot;Mollusca&quot;) %&gt;%
+  filter(year == 2011) %&gt;%
+  group_by(country) %&gt;%
+  summarize(mollusca_catch = sum(catch, na.rm=T)) %&gt;% 
+  top_n(1)</code></pre>
+<pre><code>## Selecting by mollusca_catch</code></pre>
+<pre><code>## # A tibble: 1 x 2
+##   country mollusca_catch
+##   &lt;fct&gt;            &lt;dbl&gt;
+## 1 China           584078</code></pre>
+<p>China caught the most mollusca in 2011.</p>
 </div>
 <div id="push-your-final-code-to-github" class="section level2">
 <h2>Push your final code to GitHub!</h2>

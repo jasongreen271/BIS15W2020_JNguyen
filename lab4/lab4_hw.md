@@ -1,7 +1,7 @@
 ---
 title: "Lab 4 Homework"
 author: "Jason Nguyen"
-date: "February 4, 2020"
+date: "February 6, 2020"
 output:
   html_document: 
     keep_md: yes
@@ -120,7 +120,7 @@ colnames(fisheries)
 ## [69] "2010"                    "2011"                   
 ## [71] "2012"
 ```
-##Some of the names are very specific details such as capitalization, or having a "#" or a space, so typos can occur easily.
+Some of the names are very specific details such as capitalization, or having a "#" or a space, so typos can occur easily.
 
 3. What is the structure of the data? Show the classes of each variable.
 
@@ -499,7 +499,7 @@ lapply(fisheries, class)
 
 4. Think about the classes. Will any present problems? Make any changes you think are necessary below.
 
-##We
+We need to change the first few columns into factor so we can use functions.
 
 ```r
 new_factor<- c(1,2,4:6,8)
@@ -894,7 +894,7 @@ colnames(fisheries2)
 
 8. Are these data tidy? Why or why not, and, how do you know? Use the appropriate pivot function to tidy the data. Remove the NA's. Put the tidy data frame into a new object `fisheries_tidy`.  
 
-##The data is untidy because the years are data so they should be values instead of names of columns.
+The data is untidy because the years are data so they should be values instead of names of columns.
 
 ```r
 fisheries_tidy <- fisheries2 %>% 
@@ -1006,42 +1006,180 @@ nlevels(fisheries_tidy2$ASFIS_spcode)
 12. Which country had the largest overall catch in the year 2000?
 
 ```r
-fisheries_tidy2 %>% 
+fisheries_tidy2 %>%
+  group_by(country) %>% 
   filter(year=="2000") %>% 
+  summarize(catch = sum(catch,na.rm=T)) %>% 
   arrange(desc(catch))
 ```
 
 ```
-## # A tibble: 8,793 x 6
-##    country       ISSCAAP_spgroupname   ASFIS_spcode ASFIS_sciname   year   catch
-##    <fct>         <fct>                 <fct>        <fct>           <chr>  <dbl>
-##  1 Peru          Herrings, sardines, ~ 1210600208   Engraulis ring~ 2000  9.58e6
-##  2 Chile         Herrings, sardines, ~ 1210600208   Engraulis ring~ 2000  1.70e6
-##  3 Chile         Miscellaneous pelagi~ 1702300405   Trachurus murp~ 2000  1.23e6
-##  4 Russian Fede~ Cods, hakes, haddocks 1480401601   Theragra chalc~ 2000  1.22e6
-##  5 United State~ Cods, hakes, haddocks 1480401601   Theragra chalc~ 2000  1.18e6
-##  6 Viet Nam      Marine fishes not id~ 199XXXXXXX0~ Osteichthyes    2000  1.01e6
-##  7 Iceland       Miscellaneous pelagi~ 1230400201   Mallotus villo~ 2000  8.92e5
-##  8 Myanmar       Marine fishes not id~ 199XXXXXXX0~ Osteichthyes    2000  8.73e5
-##  9 Norway        Herrings, sardines, ~ 1210500105   Clupea harengus 2000  8.00e5
-## 10 Chile         Herrings, sardines, ~ 1210507801   Strangomera be~ 2000  7.23e5
-## # ... with 8,783 more rows
+## # A tibble: 193 x 2
+##    country                     catch
+##    <fct>                       <dbl>
+##  1 Peru                     10625010
+##  2 Japan                     4921013
+##  3 United States of America  4692229
+##  4 Chile                     4297928
+##  5 Indonesia                 3761769
+##  6 Russian Federation        3678828
+##  7 Thailand                  2795719
+##  8 India                     2760632
+##  9 Norway                    2698506
+## 10 Iceland                   1982369
+## # ... with 183 more rows
 ```
-####
+Peru had the largest overall catch in the year 2000.
 
 13. Which country caught the most sardines (_Sardina_) between the years 1990-2000?
 
+```r
+fisheries_tidy2 %>%
+  group_by(country) %>% 
+  filter(year >=1990 & year<=2000) %>% 
+  filter(ASFIS_sciname == "Sardina pilchardus") %>%
+  summarize(catch = sum(catch, na.rm=T)) %>% 
+  arrange(desc(catch))
+```
+
+```
+## # A tibble: 204 x 2
+##    country              catch
+##    <fct>                <dbl>
+##  1 Morocco            4785190
+##  2 Spain              1425317
+##  3 Russian Federation 1035139
+##  4 Portugal            926318
+##  5 Ukraine             784730
+##  6 Italy               377907
+##  7 Algeria             311733
+##  8 Turkey              273565
+##  9 France              263871
+## 10 Denmark             242017
+## # ... with 194 more rows
+```
+Morocoo caught the most sardines between the years 1990-2000.
 
 14. Which five countries caught the most cephalopods between 2008-2012?
 
 
+```r
+fisheries_tidy2 %>% 
+  group_by(country) %>%
+  filter(year >= 2008 & year<=2012) %>% 
+  filter(ASFIS_sciname == "Cephalopoda") %>% 
+  summarize(catch = sum(catch, na.rm=T)) %>%
+  arrange(desc(catch)) %>% 
+  top_n(5)
+```
+
+```
+## Selecting by catch
+```
+
+```
+## # A tibble: 5 x 2
+##   country     catch
+##   <fct>       <dbl>
+## 1 India      429670
+## 2 China      268557
+## 3 Cambodia    15505
+## 4 Madagascar   7971
+## 5 Mozambique   6511
+```
+
+
 15. Given the top five countries from question 12 above, which species was the highest catch total? The lowest?
 
+```r
+top_5_fisheries <- fisheries_tidy2 %>% 
+  filter(country %in% c("India", "China", "Cambodia", "Madagascar", "Mozambique")) %>% 
+  group_by(ASFIS_sciname) %>%
+  summarize(catch=sum(catch, na.rm=T)) %>% 
+  arrange(desc(catch))
+
+top_n(top_5_fisheries, 1)
+```
+
+```
+## Selecting by catch
+```
+
+```
+## # A tibble: 1 x 2
+##   ASFIS_sciname     catch
+##   <fct>             <dbl>
+## 1 Osteichthyes  101995246
+```
+
+```r
+top_n(top_5_fisheries, -1)
+```
+
+```
+## Selecting by catch
+```
+
+```
+## # A tibble: 2 x 2
+##   ASFIS_sciname       catch
+##   <fct>               <dbl>
+## 1 Lampanyctus achirus     0
+## 2 Merluccius polli        0
+```
+The species with the highest catch total among these five countries was "Osteichthyes." The species with the lowest catch total among these five countries was "Lampanyctus achirus" and "Merluccius polli."
 
 16. In some cases, the taxonomy of the fish being caught is unclear. Make a new data frame called `coastal_fish` that shows the taxonomic composition of "Miscellaneous coastal fishes" within the ISSCAAP_spgroupname column.
 
+```r
+coastal_fish <- fisheries_tidy2 %>%
+  filter(ISSCAAP_spgroupname == "Miscellaneous coastal fishes")
+coastal_fish
+```
+
+```
+## # A tibble: 69,821 x 6
+##    country ISSCAAP_spgroupname          ASFIS_spcode ASFIS_sciname year  catch
+##    <fct>   <fct>                        <fct>        <fct>         <chr> <dbl>
+##  1 Albania Miscellaneous coastal fishes 1703926101   Boops boops   1983    559
+##  2 Albania Miscellaneous coastal fishes 1703926101   Boops boops   1984    392
+##  3 Albania Miscellaneous coastal fishes 1703926101   Boops boops   1985    406
+##  4 Albania Miscellaneous coastal fishes 1703926101   Boops boops   1986    499
+##  5 Albania Miscellaneous coastal fishes 1703926101   Boops boops   1987    564
+##  6 Albania Miscellaneous coastal fishes 1703926101   Boops boops   1988    724
+##  7 Albania Miscellaneous coastal fishes 1703926101   Boops boops   1989    583
+##  8 Albania Miscellaneous coastal fishes 1703926101   Boops boops   1990    754
+##  9 Albania Miscellaneous coastal fishes 1703926101   Boops boops   1991    283
+## 10 Albania Miscellaneous coastal fishes 1703926101   Boops boops   1992    196
+## # ... with 69,811 more rows
+```
+
 
 17. Use the data to do at least one exploratory analysis of your choice. What can you learn?
+
+I am going to discover which country caught the most mollusca in 2011.
+
+
+```r
+fisheries_tidy2 %>%
+  filter(ASFIS_sciname == "Mollusca") %>%
+  filter(year == 2011) %>%
+  group_by(country) %>%
+  summarize(mollusca_catch = sum(catch, na.rm=T)) %>% 
+  top_n(1)
+```
+
+```
+## Selecting by mollusca_catch
+```
+
+```
+## # A tibble: 1 x 2
+##   country mollusca_catch
+##   <fct>            <dbl>
+## 1 China           584078
+```
+China caught the most mollusca in 2011.
 
 ## Push your final code to GitHub!
 Please be sure that you check the `keep md` file in the knit preferences.   
