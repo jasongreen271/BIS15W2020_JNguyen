@@ -1,7 +1,7 @@
 ---
 title: "Lab 5 Homework"
-author: "Jason Nguyen"
-date: "February 10, 2020"
+author: "Please Add Your Name Here"
+date: "Please Add the Date Here"
 output:
   html_document:
     theme: spacelab
@@ -45,35 +45,9 @@ amphibio <-
 
 ## Questions  
 **1. First, do some exploratory analysis of both data sets. What is the structure, column names, and dimensions?**  
-```{r}
-str(amniota)
-```
-
-```{r}
-colnames(amniota)
-```
-```{r}
-dim(amniota)
-```
-
-```{r}
-str(amphibio)
-```
-
-```{r}
-colnames(amphibio)
-```
-
-```{r}
-dim(amphibio)
-```
 
 
 **2. How many total NAs are in each data set? Do these values make sense? Are NAs represented by any other values?**   
-```{r}
-amniota %>% 
-  select(class)
-```
 
 
 **3. Make any necessary replacements in the data such that all NAs appear as "NA".**   
