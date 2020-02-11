@@ -57,6 +57,9 @@ summary(sleep)
 ```{r}
 sleep[1,]
 sleep[,1]
+#column, then row
+#sleep[ ,1]
+#sleep[1, ]
 ```
 
 
@@ -64,6 +67,9 @@ sleep[,1]
 ```{r}
 small_mammals <- filter(sleep, bodywt<=1)
 small_mammals
+```
+#not a big deal, just tidying up
+```{r}
 large_mammals <- filter(sleep, bodywt>=200)
 large_mammals
 ```
@@ -72,6 +78,9 @@ large_mammals
 8. What is the mean weight for both the large and small mammals?
 ```{r}
 mean(small_mammals$bodywt)
+```
+
+```{r}
 mean(large_mammals$bodywt)
 ```
 
@@ -93,6 +102,13 @@ sleepiest <- filter(sleep, sleep_total>18)
 sleepiest$name <- as.factor(sleepiest$name)
 levels(sleepiest$name)
 ```
+
+#that all works fine, but you don't have to change the class to get a list of the sleepiest critters
+```{r}
+#sleepy <- subset(sleep, sleep_total>=18)
+#sleepy
+```
+
 
 
 ## Push your final code to GitHub

@@ -41,12 +41,15 @@ spec(homerange)
 ```{r}
 dim(homerange)
 ```
+
 ```{r}
 colnames(homerange)
 ```
 
 ```{r}
 lapply(homerange, class)
+#nice, I didn't know this one! You can also use-
+#glimpse(homerange)
 ```
 
 ```{r}
@@ -74,6 +77,7 @@ levels(homerange$taxon)
 homerange$order <- as.factor(homerange$order)
 class(homerange$order)
 ```
+
 ```{r}
 levels(homerange$order)
 ```
@@ -138,6 +142,14 @@ homerange %>%
   select(common.name, log10.hra, log10.mass, hra.mass.ratio)
 ```
   The hra.mass.ratio for an ostrich is 1.602565.
+  
+#Remember you calculated mass ratio for all lines in hra.mass.ratio (though this is a little confusing since it is also a varible name, perhaps just calling that object hra_ratio2 might be better) So you could also do-
+
+```{r}
+#hra.mass.ratio %>% 
+  #filter(genus=="struthio" & species=="camelus")
+```
+
 
 ## Push your final code to GitHub!
 Please be sure that you have check the `keep md` file in the knit preferences.  
