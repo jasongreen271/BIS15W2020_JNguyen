@@ -49,8 +49,31 @@ amphibio <-
 str(amniota)
 ```
 
+```{r}
+colnames(amniota)
+```
+```{r}
+dim(amniota)
+```
+
+```{r}
+str(amphibio)
+```
+
+```{r}
+colnames(amphibio)
+```
+
+```{r}
+dim(amphibio)
+```
+
 
 **2. How many total NAs are in each data set? Do these values make sense? Are NAs represented by any other values?**   
+```{r}
+amniota %>% 
+  select(class)
+```
 
 
 **3. Make any necessary replacements in the data such that all NAs appear as "NA".**   
