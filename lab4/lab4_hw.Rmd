@@ -32,6 +32,7 @@ fisheries
 2. What are the names of the columns? Do you see any potential problems with the column names?
 ```{r}
 colnames(fisheries)
+#option names()
 ```
 Some of the names are very specific details such as capitalization, or having a "#" or a space, so typos can occur easily.
 
@@ -39,8 +40,11 @@ Some of the names are very specific details such as capitalization, or having a 
 ```{r}
 str(fisheries)
 ```
+
+
 ```{r}
 lapply(fisheries, class)
+#option glimpse()
 ```
 
 
@@ -51,6 +55,11 @@ We need to change the first few columns into factor so we can use functions.
 new_factor<- c(1,2,4:6,8)
 fisheries[,new_factor] <- lapply(fisheries[,new_factor], as.factor)
 lapply(fisheries, class)
+
+#This is new code for me! But it looks like it did the trick. Just to give an alternate method which is a little bit more direct-
+#fisheries$Country <- as.factor(fisheries$Country)
+#fisheries$`ISSCAAP group#` <- as.factor(fisheries$`ISSCAAP group#`)
+#etc...
 ```
 
 5. How many countries are represented in the data? Provide a count.
@@ -73,10 +82,17 @@ levels(fisheries$Country)
 + ISSCAAP_spgroupname
 + FAO_area
 + unit
-
+##Putting these on separate lines will make it easier to read, and easier to catch extra punctuation
 ```{r}
 fisheries2 <- fisheries %>% 
-  rename(country="Country", commname="Common name", ISSCAAP_spgroup="ISSCAAP group#",  "ISSCAAP_spgroupname"="ISSCAAP taxonomic group" , "ASFIS_spcode"="ASFIS species#", ASFIS_sciname="ASFIS species name", FAO_area="FAO major fishing area", unit="Measure")
+  rename(country="Country", 
+         commname="Common name", 
+         ISSCAAP_spgroup="ISSCAAP group#",  
+         ISSCAAP_spgroupname="ISSCAAP taxonomic group" , 
+         ASFIS_spcode="ASFIS species#", 
+         ASFIS_sciname="ASFIS species name", 
+         FAO_area="FAO major fishing area", 
+         unit="Measure")
 ```
 
 ```{r}
@@ -119,6 +135,14 @@ class(fisheries_tidy2$catch)
 nlevels(fisheries_tidy2$ASFIS_spcode)
 ```
 
+##use n_distinct to give you the number of distinct taxa
+```{r}
+#fisheries_tidy2 %>% 
+  #summarize(n_taxa=n_distinct(ASFIS_spcode))
+```
+
+
+
 12. Which country had the largest overall catch in the year 2000?
 ```{r}
 fisheries_tidy2 %>%
@@ -140,8 +164,7 @@ fisheries_tidy2 %>%
 ```
 Morocoo caught the most sardines between the years 1990-2000.
 
-14. Which five countries caught the most cephalopods between 2008-2012?
-
+##By only looking at the sciname you are actually only picking lines that couldn't be identified past class Cephalopoda. Pulling the ISSCAAP_spgroupname "Squids, cuttlefishes, octopuses" would get you the answer we're after 14. 
 ```{r}
 fisheries_tidy2 %>% 
   group_by(country) %>%
@@ -154,6 +177,7 @@ fisheries_tidy2 %>%
 
 
 15. Given the top five countries from question 12 above, which species was the highest catch total? The lowest?
+##This question was looking for the cephalopod spp with the highest and lowest catch. So you could take the code from above and instead of grouping my country, group by AFSIS_sciname
 ```{r}
 top_5_fisheries <- fisheries_tidy2 %>% 
   filter(country %in% c("India", "China", "Cambodia", "Madagascar", "Mozambique")) %>% 
@@ -167,6 +191,7 @@ top_n(top_5_fisheries, -1)
 The species with the highest catch total among these five countries was "Osteichthyes." The species with the lowest catch total among these five countries was "Lampanyctus achirus" and "Merluccius polli."
 
 16. In some cases, the taxonomy of the fish being caught is unclear. Make a new data frame called `coastal_fish` that shows the taxonomic composition of "Miscellaneous coastal fishes" within the ISSCAAP_spgroupname column.
+##Grouping by ASFIS_sciname might make the results more readable
 ```{r}
 coastal_fish <- fisheries_tidy2 %>%
   filter(ISSCAAP_spgroupname == "Miscellaneous coastal fishes")
@@ -177,6 +202,7 @@ coastal_fish
 17. Use the data to do at least one exploratory analysis of your choice. What can you learn?
 
 I am going to discover which country caught the most mollusca in 2011.
+##Nice, this works just fine, but remember, Mollusca in the sciname column means it couldn't be identified beyond phylum level, so you might prefer to filter by the species group name
 
 ```{r}
 fisheries_tidy2 %>%
