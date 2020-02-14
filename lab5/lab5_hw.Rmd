@@ -17,7 +17,7 @@ Answer the following questions and complete the exercises in RMarkdown. Please e
 
 ## Libraries
 ```{r}
-install.packages("stringi") #I could not use tidyverse without installing 'stringi' because it said it did not have the package 'stringi'
+#install.packages("stringi")
 library(tidyverse)
 library(naniar)
 library(skimr)
