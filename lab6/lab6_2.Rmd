@@ -198,6 +198,7 @@ homerange %>%
 ```{r}
 summary(homerange$log10.hra)
 ```
+
 ```{r}
 homerange2 <- homerange %>% 
     mutate(range_category = case_when(log10.hra <= 3.653 ~ "small",
