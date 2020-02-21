@@ -62,22 +62,33 @@ summary(gapminder)
 gapminder %>%
   select(year, lifeExp) %>% 
   group_by(year) %>% 
+  summarize(global_lifeExp = sum(lifeExp))
+```
+```{r}
+gapminder %>%
+  group_by(year) %>% 
+  summarize(global_lifeExp = sum(lifeExp)) %>% 
+  ggplot(aes(x=year, y=global_lifeExp))+
+  geom_point(color="turquoise4") +
+  geom_line(color="turquoise3") +
+  labs(title="Global Life Expectancy from 1952 to 2007",
+       x= "Year",
+       y="Life Expectancy") +
+  theme(plot.title = element_text(size = rel(2), hjust = 0.5))
+```
+
+**3. How do the distributions of life expectancy compare for the years 1952 and 2007? _Challenge: Can you put both distributions on a single plot?_**
+```{r}
+gapminder %>%
+  filter(year %in% c(1952, 2007)) %>%
+  select(year, lifeExp) %>% 
+  group_by(year) %>% 
   summarize(min_lifeExp=min(lifeExp),
             max_lifeExp=max(lifeExp),
             mean_lifeExp=mean(lifeExp),
             median_lifeEx=median(lifeExp))
 ```
-```{r}
-gapminder %>%
-  ggplot(aes(x=year, y=lifeExp, group=year))+
-  geom_boxplot(fill="turquoise3", alpha=.6) +
-  labs(title="Global Life Expectancy from 1952 to 2007",
-       x= "Year",
-       y="Life Expectancy") +
-  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5))
-```
 
-**3. How do the distributions of life expectancy compare for the years 1952 and 2007? _Challenge: Can you put both distributions on a single plot?_**
 ```{r}
 gapminder %>%
   filter(year %in% c(1952, 2007)) %>%
@@ -115,14 +126,17 @@ gapminder %>%
 ```{r}
 gapminder %>% 
   select(continent, year, lifeExp) %>% 
-  group_by(year) %>% 
+  group_by(continent, year) %>% 
     summarize(mean_lifeExp=mean(lifeExp))
 ```
 
 ```{r}
 gapminder %>% 
-  ggplot(aes(x=year, y=lifeExp, group= continent, color=continent))+
-  geom_jitter(alpha=.6) +
+  group_by(year, continent) %>% 
+  summarize(mean_lifeExp=mean(lifeExp)) %>% 
+  ggplot(aes(x=year, y=mean_lifeExp, color=continent))+
+  geom_point() +
+  geom_line(alpha=.6) +
   labs(title="Global Life Expectancy by Continent",
        x= "Year",
        y="Life Expectancy") +
@@ -149,20 +163,50 @@ gapminder %>%
        y= "Life Expectancy") +
   theme(plot.title = element_text(size = rel(2), hjust = 0.5))
 ```
-# I would characterize the relationship as a logarithmic curve.
+# I would characterize the relationship as a logarithmic curve or proportional to each other.
 
 **8. Which countries have had the largest population growth since 1952?**
 ```{r}
 gapminder %>% 
-  select(country, year, pop) %>% 
-  filter(year %in% c(1952, 2007))
+  select(country, year, pop) %>%
+  group_by(country) %>% 
+  summarize(pop_growth = last(pop)-first(pop)) %>% 
+  arrange(desc(pop_growth))
 ```
 
 **9. Use your results from the question above to plot population growth for the top five countries since 1952.**
-
+```{r}
+gapminder %>%
+  filter(country == "China" |
+           country == "India" | 
+           country == "United States" | 
+           country == "Indonesia" |
+           country == "Brazil") %>% 
+  ggplot(aes(x=year, y=pop, color=country)) +
+  geom_point() +
+  geom_line() +
+  labs(title = "Top 5 Population Growths by Country",
+       x= "Year",
+       y= "Population") +
+  theme(plot.title = element_text(size = rel(2), hjust = 0.5))
+```
 
 **10. How does per capita GDP growth compare between these same five countries?**
-
+```{r}
+gapminder %>%
+  filter(country == "China" |
+           country == "India" | 
+           country == "United States" | 
+           country == "Indonesia" |
+           country == "Brazil") %>% 
+  ggplot(aes(x=year, y=gdpPercap, color=country)) +
+  geom_point() +
+  geom_line() +
+   labs(title = "GDP per Capita Growth for the Top 5 Countries with the Largest Population Growth",
+       x= "Year",
+       y= "GDP Per Capita") +
+  theme(plot.title = element_text(size = rel(1), hjust = 0.5))
+```
 
 ## Push your final code to GitHub!
 Please be sure that you check the `keep md` file in the knit preferences. 
