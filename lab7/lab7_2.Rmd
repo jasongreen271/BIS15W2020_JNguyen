@@ -21,6 +21,9 @@ knitr::opts_chunk$set(
 library("tidyverse")
 library("shiny")
 library("naniar")
+
+install.packages("shinydashboard")
+library("shinydashboard")
 ```
 
 ## Learning Goals
@@ -94,9 +97,6 @@ shinyApp(ui, server)
 ## ui Layout with shinydashboard  
 
 We now have a functional app which does several things, but the layout doesn't look very nice. We can change that with many different methods, but shiny dashboards are simple to use and offer a lot of functionality for making apps look professional quickly. First we need to install the `shinydashboard` package.  
-```{r}
-#install.packages("shinydashboard")
-```
 
 When working with any package on shiny ui appearance, it's important to know how the ui is laid out. The ui is laid out in a bootstrap grid pattern with 12 columns that can be subdivided into rows. The grid is contained in the `fluidPage()` of our current app. We won't use `fluidPage()` with `shinydashboard` but rather `dashboardPage()`. A shiny dashboard contains a minimum of a header, a sidebar, and a body. The `dashboardPage()` still contains the bootstrap grid.  
 ```{r}
@@ -241,8 +241,48 @@ Reference: Koerner SE, Poulsen JR, Blanchard EJ, Okouyi J, Clark CJ. Vertebrate 
 gabon <- readr::read_csv("data/IvindoData_DryadVersion.csv")
 ```
 
+```{r}
+colnames(gabon)
+```
+
+```{r}
+```
+
 2. Build an app that re-creates the plots shown on page 810 of this paper. It compares the relative abundance % to the distance from villages in rural Gabon. Use shiny dashboard and add aesthetics to the plot.  
 
+```{r}
+
+ui <- dashboardPage(
+  dashboardHeader(title = "Plot Iris App"),
+  dashboardSidebar(),
+  dashboardBody(
+  fluidRow(
+  box(title = "Plot Options", width = 3,
+  selectInput("x", "Select X Variable", choices = c("RA_Apes", "RA_Birds", "RA_Elephant",  "RA_Monkeys", "RA_Rodent", "Ra_Ungulate"), 
+              selected = "Petal.Width")
+  ), # close the first box
+  box(title = "Plot of Iris Data", width = 7,
+  plotOutput("plot", width = "600px", height = "500px")
+  ) # close the second box
+  ) # close the row
+  ) # close the dashboard body
+) # close the ui
+
+server <- function(input, output, session) { 
+  
+  # the code to make the plot of iris data grouped by species
+  output$plot <- renderPlot({
+    ggplot(gabon, aes_string(x = "Distance", y = input$x)) + geom_point() + theme_light(base_size = 18)
+  })
+  
+  # stop the app when we close it
+  session$onSessionEnded(stopApp)
+
+  }
+
+shinyApp(ui, server)
+
+```
 
 ## That's it, let's take a break!   
 
