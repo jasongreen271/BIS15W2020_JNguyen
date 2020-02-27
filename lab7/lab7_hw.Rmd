@@ -20,7 +20,6 @@ Answer the following questions and complete the exercises in RMarkdown. Please e
 library(tidyverse)
 library(shiny)
 library(shinydashboard)
-librar
 ```
 
 ## Data
@@ -44,6 +43,9 @@ glimpse(UC_admit)
 
 ```{r}
 naniar::miss_var_summary(UC_admit)
+```
+```{r}
+UC_admit$Academic_Yr <- as.factor(UC_admit$Academic_Yr)
 ```
 
 
