@@ -28,6 +28,8 @@ The data for this assignment come from the [University of California Information
 UC_admit <- readr::read_csv("data/UC_admit.csv")
 ```
 
+
+##Your apps are in a different folder than your data files so they don't run. Note on the second app that your years are being treated as numeric values instead of factors.
 **1. Use the function(s) of your choice to get an idea of the overall structure of the data frame, including its dimensions, column names, variable classes, etc. As part of this, determine if there are NA's and how they are treated.**  
 ```{r}
 dim(UC_admit)
@@ -78,7 +80,7 @@ server <- function(input, output, session) {
 shinyApp(ui, server)
 ```
 
-
+##This second app might be more effective if the various options were split out into more inputs instead of just one.
 **3. Make alternate version of your app above by tracking enrollment at a campus over all of the represented years while allowing users to interact with campus, category, and ethnicity.**
 ```{r}
 ui <- dashboardPage(
