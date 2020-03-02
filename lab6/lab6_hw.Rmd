@@ -58,12 +58,14 @@ summary(gapminder)
 ```
 
 **2. Among the interesting variables in gapminder is life expectancy. How has global life expectancy changed between 1952 and 2007?**
+##It looks like what you've done here is actually add the life expectancies for all the countries together (see that the life expectancy in 1952 in your table is 6966.) This is why we make these data tables, they are nice sanity checks for our code. 
 ```{r}
 gapminder %>%
   select(year, lifeExp) %>% 
   group_by(year) %>% 
   summarize(global_lifeExp = sum(lifeExp))
 ```
+##And so that error carries through here, note on your y axis that life expectancy goes from 7000 to over 9000 years!
 ```{r}
 gapminder %>%
   group_by(year) %>% 
@@ -88,7 +90,7 @@ gapminder %>%
             mean_lifeExp=mean(lifeExp),
             median_lifeEx=median(lifeExp))
 ```
-
+##This is totally fine, but you could also use a density plot here.
 ```{r}
 gapminder %>%
   filter(year %in% c(1952, 2007)) %>%
@@ -110,7 +112,7 @@ gapminder %>%
             mean_lifeExp=mean(lifeExp),
             median_lifeEx=median(lifeExp))
 ```
-
+##Nice!
 ```{r}
 gapminder %>%
   ggplot(aes(x=continent, y=lifeExp, group=continent, fill=continent))+
@@ -129,7 +131,7 @@ gapminder %>%
   group_by(continent, year) %>% 
     summarize(mean_lifeExp=mean(lifeExp))
 ```
-
+##I love these geom_point lines, makes it even easier to compare values at each year.
 ```{r}
 gapminder %>% 
   group_by(year, continent) %>% 
@@ -153,6 +155,7 @@ gapminder %>%
 
 
 **7. There is extreme disparity in per capita GDP. Rescale the x axis to make this easier to interpret. How would you characterize the relationship?**
+##We can rescale the data using scale_x_log10(), and then make the relationship even more apparent using geom_smooth() to add a regression line
 ```{r}
 gapminder %>% 
   filter(gdpPercap <=50000) %>% 
@@ -176,6 +179,7 @@ gapminder %>%
 ```
 
 **9. Use your results from the question above to plot population growth for the top five countries since 1952.**
+##This code chunk is so tidy, love it!
 ```{r}
 gapminder %>%
   filter(country == "China" |
