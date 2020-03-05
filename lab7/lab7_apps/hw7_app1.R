@@ -1,3 +1,7 @@
+if (!require("tidyverse")) install.packages('tidyverse')
+library("tidyverse")
+if (!require("shiny")) install.packages('shiny')
+library("shiny")
 if (!require("shinydashboard")) install.packages('shinydashboard')
 library("shinydashboard")
 
