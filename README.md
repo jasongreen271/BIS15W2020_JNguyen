@@ -1,5 +1,5 @@
 # BIS 15L Repository
-> Welcome to my repository for BIS 15 during Winter Quarter 2020 at UC Davis.
+> Welcome. This repository includes class lessons and homework for BIS 15L at UC Davis during Winter Quarter 2020.
 
 ## Name:
 > Jason Nguyen
